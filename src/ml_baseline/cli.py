@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
 from typing import Optional
@@ -66,7 +65,9 @@ def predict(
     run: str = typer.Option("latest", "--run", help="'latest' or a path to a run dir."),
     input: Path = typer.Option(..., "--input", exists=True, help="Input CSV/Parquet."),
     output: Path = typer.Option(Path("outputs/preds.csv"), "--output", help="Output path."),
-    threshold: float | None = typer.Option(None, "--threshold", help="Override decision threshold (classification)."),
+    threshold: float | None = typer.Option(
+        None, "--threshold", help="Override decision threshold (classification)."
+    ),
 ) -> None:
     """Batch predict using a saved run."""
     paths = Paths.from_repo_root()
@@ -76,8 +77,11 @@ def predict(
     typer.echo(f"Wrote: {output}")
 
 
+# ✅ التعديل هنا
 @app.command("show-run")
-def show_run(run: str = "latest") -> None:
+def show_run(
+    run: str = typer.Option("latest", "--run", help="'latest' or a run id"),
+) -> None:
     """Print run_meta.json for a saved run."""
     paths = Paths.from_repo_root()
     run_dir = resolve_run_dir(run, models_dir=paths.models_dir)
