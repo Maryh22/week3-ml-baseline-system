@@ -1,47 +1,45 @@
-# Model Card — Week 3 ML Baseline
+# Model Card — Week 3 Baseline
 
-## 1. Model Purpose
-This model predicts whether a user is a high-value user based on their historical order behavior.
+## Problem
+- Target: `is_high_value`
+- Unit of analysis: user (one row per user)
+- Decision enabled: Predict whether a user is high value (1) or not (0) to support downstream business decisions (e.g. targeting or prioritization).
 
-**Target (y):**
-- `is_high_value` (binary: 0 or 1)
+## Data
+- Feature table: `data/processed/features.csv`
+- Dataset hash (sha256):  
+  `6bda418ff35552e80ee9f66ce1a24c434e51ac59d69d0ff099c68ea623456ebe`
 
-**Unit of analysis:**
-- One row per user
+## Splits
+- Holdout: random split  
+- Test size: 0.2  
+- Seed: 42  
+- Strategy: random stratified split
 
----
+## Metrics (holdout)
+- Baseline:
+  - ROC AUC: 0.50  
+  - PR AUC: 0.20  
+  - Accuracy: 0.80  
+- Model (Logistic Regression):
+  - ROC AUC: 1.00  
+  - PR AUC: 1.00  
+  - Accuracy: 1.00  
+  - Precision: 1.00  
+  - Recall: 1.00  
+  - F1-score: 1.00  
 
-## 2. Input Data (Dataset Contract)
+## Limitations
+- Dataset is small, which may lead to overly optimistic metrics.
+- Perfect holdout performance suggests potential data simplicity or leakage risk.
+- Features are limited and may not generalize well to real-world data.
 
-### ID Columns (passthrough)
-- `user_id`
+## Monitoring sketch
+- Monitor prediction positive rate over time.
+- Track feature distribution drift (e.g. country, avg_amount).
+- Recompute holdout metrics periodically after retraining.
 
-### Feature Columns (X)
-- `country`
-- `n_orders`
-- `avg_amount`
-- `total_amount`
-
-### Target Column (y)
-- `is_high_value`
-
-### Forbidden Columns
-- `is_high_value` must never be used as a feature during training or inference.
-
----
-
-## 3. Data Source
-Sample feature table generated using `ml-baseline make-sample-data`.
-
----
-
-## 4. Evaluation Plan
-- Train / validation split
-- Primary metric: ROC AUC
-- Secondary metrics: accuracy, precision, recall
-
----
-
-## 5. Limitations
-- Sample data is synthetic and small.
-- Performance metrics may not generalize to real-world data.
+## Reproducibility
+- Run id: `2025-12-30T20-43-06Z__classification__seed42`
+- Git commit: `<PASTE git commit hash here>`
+- Env: `models/runs/2025-12-30T20-43-06Z__classification__seed42/env/pip_freeze.txt`
